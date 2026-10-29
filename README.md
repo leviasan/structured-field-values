@@ -63,6 +63,14 @@ Only the new commit reference is stored in the commit. If the tests fail on the 
 git -C Leviasan.StructuredFieldValues.Tests/StructuredFieldTests checkout <commit>
 ```
 
+## Building the NuGet package
+
+```powershell
+dotnet pack Leviasan.StructuredFieldValues -c Release -p:ContinuousIntegrationBuild=true -o artifacts
+```
+
+`ContinuousIntegrationBuild=true` makes the build deterministic and normalizes source paths for Source Link. It is enabled automatically on GitHub Actions, but must be passed explicitly for a local pack (for example, a manual first publish). Do not use it for everyday debugging.
+
 ## License
 
 See [LICENSE.txt](LICENSE.txt). The conformance data keeps its own license, which is included in the submodule (`LICENSE.md`).
