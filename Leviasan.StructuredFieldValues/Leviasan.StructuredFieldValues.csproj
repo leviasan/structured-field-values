@@ -29,6 +29,9 @@
   	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
   	<!-- API documentation shipped with the package (IntelliSense XML docs for consumers) -->
   	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+  	<!-- Deterministic, reproducible builds (normalized source paths for Source Link); enabled on CI or with -p:ContinuousIntegrationBuild=true -->
+  	<Deterministic>true</Deterministic>
+  	<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
   
   <ItemGroup>
