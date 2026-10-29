@@ -1,6 +1,12 @@
 # structured-field-values
 
-The parser and serializer for HTTP Structured Field Values ([RFC 9651](https://www.rfc-editor.org/rfc/rfc9651.html)).
+[![NuGet](https://img.shields.io/nuget/v/Leviasan.StructuredFieldValues.svg)](https://www.nuget.org/packages/Leviasan.StructuredFieldValues)
+[![Downloads](https://img.shields.io/nuget/dt/Leviasan.StructuredFieldValues.svg)](https://www.nuget.org/packages/Leviasan.StructuredFieldValues)
+[![CI](https://github.com/leviasan/structured-field-values/actions/workflows/ci.yml/badge.svg)](https://github.com/leviasan/structured-field-values/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/leviasan/structured-field-values.svg)](LICENSE.txt)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4.svg)](https://dotnet.microsoft.com/)
+[![RFC 9651](https://img.shields.io/badge/RFC-9651-blue.svg)](https://www.rfc-editor.org/rfc/rfc9651.html)
+
 Usage and API are described in the [package README](Leviasan.StructuredFieldValues/README.md).
 
 ## Repository layout
