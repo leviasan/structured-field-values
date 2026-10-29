@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+  	<!-- Core build/language settings -->
+    <TargetFramework>net10.0</TargetFramework>
+  	<LangVersion>latest</LangVersion>
+  	<Nullable>enable</Nullable>
+  	<!-- Package/assembly version -->
+  	<Version>1.0.0</Version>
+  	<!-- API compatibility check against the previous released version -->
+  	<EnablePackageValidation>false</EnablePackageValidation>
+  	<PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion>
+  	<!-- Package identity and NuGet.org listing metadata -->
+  	<PackageId>Leviasan.StructuredFieldValues</PackageId>
+  	<Title>Leviasan.StructuredFieldValues</Title>
+  	<Authors>Oleksandr Rogozin</Authors>
+    <Description>Parser and serializer for HTTP Structured Field Values (RFC 9651, obsoletes RFC 8941): Lists, Dictionaries and Items with Integer, Decimal, String, Token, Byte Sequence, Boolean, Date and Display String bare items.</Description>
+	<PackageTags>http;structured-fields;structured-field-values;rfc9651;rfc8941;headers</PackageTags>
+  	<PackageReadmeFile>README.md</PackageReadmeFile>
+  	<!-- Licensing and project links shown on the NuGet.org package page -->
+  	<PackageProjectUrl>https://github.com/leviasan/structured-field-values</PackageProjectUrl>
+  	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+  	<!-- Source Link: lets consumers step through this package's source/PDBs while debugging -->
+  	<RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/leviasan/structured-field-values</RepositoryUrl>
+  	<PublishRepositoryUrl>true</PublishRepositoryUrl>
+  	<EmbedUntrackedSources>true</EmbedUntrackedSources>
+  	<IncludeSymbols>true</IncludeSymbols>
+  	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  	<!-- API documentation shipped with the package (IntelliSense XML docs for consumers) -->
+  	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  
+  <ItemGroup>
+  	<!-- Ship the README as part of the package content (referenced by PackageReadmeFile above) -->
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  
+  <!-- Derives FileVersion/AssemblyVersion from the git commit count, so every build has a unique, ordered version -->
+  <Target Name="SetGitVersion" BeforeTargets="BeforeBuild">
+  	<Exec Command="git rev-list --count HEAD" ConsoleToMSBuild="true" IgnoreExitCode="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitCount" />
+  	</Exec>
+    <PropertyGroup>
+      <GitCommitCount Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(GitCommitCount)', '^[0-9]+$'))">0</GitCommitCount>
+      <FileVersion>$(Version).$(GitCommitCount)</FileVersion>
+  	  <AssemblyVersion>$(Version)</AssemblyVersion>
+  	</PropertyGroup>
+  </Target>
+
+</Project>

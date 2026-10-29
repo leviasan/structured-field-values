@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: true
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore structured-field-values.slnx
+
+      - name: Build
+        run: dotnet build structured-field-values.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test structured-field-values.slnx --configuration Release --no-build --verbosity normal
