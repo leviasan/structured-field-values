@@ -20,6 +20,14 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Verify tag is on master
+        run: |
+          git fetch origin master
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/master; then
+            echo "Tag ${{ github.ref_name }} must point to a commit on master"
+            exit 1
+          fi
+
       - name: Verify tag matches project version
         run: |
           VERSION=$(dotnet msbuild Leviasan.StructuredFieldValues/Leviasan.StructuredFieldValues.csproj -getProperty:Version)
