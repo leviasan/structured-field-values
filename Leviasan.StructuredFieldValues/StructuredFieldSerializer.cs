@@ -30,9 +30,9 @@ namespace Leviasan.StructuredFieldValues
             {
                 if (index > 0)
                 {
-                    builder.Append(", ");
+                    _ = builder.Append(", ");
                 }
-                builder.Append(dictionary[index].Key);
+                _ = builder.Append(dictionary[index].Key);
                 SfMember member = dictionary[index].Value;
                 if (member is SfItem { Value: SfBareBoolean { Value: true } })
                 {
@@ -40,7 +40,7 @@ namespace Leviasan.StructuredFieldValues
                 }
                 else
                 {
-                    builder.Append('=');
+                    _ = builder.Append('=');
                     AppendMember(builder, member);
                 }
             }
@@ -77,7 +77,9 @@ namespace Leviasan.StructuredFieldValues
             for (int index = 0; index < list.Count; index++)
             {
                 if (index > 0)
-                    builder.Append(", ");
+                {
+                    _ = builder.Append(", ");
+                }
                 AppendMember(builder, list[index]);
             }
             return builder.ToString();
@@ -109,7 +111,7 @@ namespace Leviasan.StructuredFieldValues
         /// <param name="item">The item to append.</param>
         private static void AppendItem(StringBuilder builder, SfItem item)
         {
-            builder.Append(item.Value.ToString());
+            _ = builder.Append(item.Value.ToString());
             AppendParameters(builder, item.Parameters);
         }
         /// <summary>
@@ -119,14 +121,16 @@ namespace Leviasan.StructuredFieldValues
         /// <param name="innerList">The inner list to append.</param>
         private static void AppendInnerList(StringBuilder builder, SfInnerList innerList)
         {
-            builder.Append('(');
+            _ = builder.Append('(');
             for (int index = 0; index < innerList.Count; index++)
             {
                 if (index > 0)
-                    builder.Append(' ');
+                {
+                    _ = builder.Append(' ');
+                }
                 AppendItem(builder, innerList[index]);
             }
-            builder.Append(')');
+            _ = builder.Append(')');
             AppendParameters(builder, innerList.Parameters);
         }
         /// <summary>
@@ -136,14 +140,14 @@ namespace Leviasan.StructuredFieldValues
         /// <param name="parameters">The parameters to append.</param>
         private static void AppendParameters(StringBuilder builder, SfParameters parameters)
         {
-            foreach (var (key, value) in parameters)
+            foreach ((string? key, SfBareItem? value) in parameters)
             {
-                builder.Append(';');
-                builder.Append(key);
+                _ = builder.Append(';');
+                _ = builder.Append(key);
                 if (value is not SfBareBoolean { Value: true })
                 {
-                    builder.Append('=');
-                    builder.Append(value.ToString());
+                    _ = builder.Append('=');
+                    _ = builder.Append(value.ToString());
                 }
             }
         }

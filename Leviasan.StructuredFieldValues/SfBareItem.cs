@@ -32,11 +32,18 @@ namespace Leviasan.StructuredFieldValues
         /// <summary>
         /// Determines whether two bare items are equal.
         /// </summary>
-        public static bool operator ==(SfBareItem? left, SfBareItem? right) => left is null ? right is null : left.Equals(right);
+        public static bool operator ==(SfBareItem? left, SfBareItem? right)
+        {
+            return left is null ? right is null : left.Equals(right);
+        }
+
         /// <summary>
         /// Determines whether two bare items are not equal.
         /// </summary>
-        public static bool operator !=(SfBareItem? left, SfBareItem? right) => !(left == right);
+        public static bool operator !=(SfBareItem? left, SfBareItem? right)
+        {
+            return !(left == right);
+        }
     }
     /// <summary>
     /// Represents a sf-integer.
@@ -63,8 +70,10 @@ namespace Leviasan.StructuredFieldValues
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="value"/> is outside [<see cref="MinInteger"/>, <see cref="MaxInteger"/>].</exception>
         public SfBareInteger(long value)
         {
-            if (value < MinInteger || value > MaxInteger)
+            if (value is < MinInteger or > MaxInteger)
+            {
                 throw new ArgumentOutOfRangeException(nameof(value), value, $"sf-integer must be within [{MinInteger}, {MaxInteger}]");
+            }
             Value = value;
         }
 
@@ -121,7 +130,9 @@ namespace Leviasan.StructuredFieldValues
         {
             decimal rounded = Math.Round(value, 3, mode);
             if (Math.Abs(Math.Truncate(rounded)) > MaxDecimalIntegerComponent)
+            {
                 throw new ArgumentOutOfRangeException(nameof(value), value, $"sf-decimal's integer component must have a magnitude of at most {MaxDecimalIntegerComponent}");
+            }
             Value = rounded;
         }
 
@@ -151,7 +162,7 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="c">The character to check.</param>
         /// <returns><see langword="true"/> if the character is allowed; otherwise, <see langword="false"/>.</returns>
-        public static bool IsValidChar(char c) => c >= 0x20 && c <= 0x7E;
+        public static bool IsValidChar(char c) => c is >= (char)0x20 and <= (char)0x7E;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SfBareString"/> class with the specified string value.
@@ -165,7 +176,9 @@ namespace Leviasan.StructuredFieldValues
             foreach (char c in value)
             {
                 if (!IsValidChar(c))
+                {
                     throw new ArgumentException("sf-string may only contain printable ASCII characters (0x20-0x7E)", nameof(value));
+                }
             }
             Value = value;
         }
@@ -187,12 +200,14 @@ namespace Leviasan.StructuredFieldValues
         public override string ToString()
         {
             StringBuilder builder = new(Value.Length + 2);
-            builder.Append('"');
+            _ = builder.Append('"');
             foreach (char c in Value)
             {
-                if (c == '"' || c == '\\')
-                    builder.Append('\\');
-                builder.Append(c);
+                if (c is '"' or '\\')
+                {
+                    _ = builder.Append('\\');
+                }
+                _ = builder.Append(c);
             }
             return builder.Append('"').ToString();
         }
@@ -212,7 +227,9 @@ namespace Leviasan.StructuredFieldValues
         {
             ArgumentNullException.ThrowIfNull(value);
             if (!StructuredFieldSyntax.IsValidToken(value))
+            {
                 throw new ArgumentException("Value must be a valid sf-token", nameof(value));
+            }
             Value = value;
         }
 
@@ -308,8 +325,10 @@ namespace Leviasan.StructuredFieldValues
         /// <exception cref="ArgumentOutOfRangeException">The <paramref name="value"/> is outside [<see cref="SfBareInteger.MinInteger"/>, <see cref="SfBareInteger.MaxInteger"/>].</exception>
         public SfBareDate(long value)
         {
-            if (value < SfBareInteger.MinInteger || value > SfBareInteger.MaxInteger)
+            if (value is < SfBareInteger.MinInteger or > SfBareInteger.MaxInteger)
+            {
                 throw new ArgumentOutOfRangeException(nameof(value), value, $"sf-date must be within [{SfBareInteger.MinInteger}, {SfBareInteger.MaxInteger}]");
+            }
             Value = value;
         }
         /// <summary>
@@ -382,13 +401,12 @@ namespace Leviasan.StructuredFieldValues
         public override string ToString()
         {
             StringBuilder builder = new();
-            builder.Append("%\"");
+            _ = builder.Append("%\"");
             foreach (byte b in Encoding.UTF8.GetBytes(Value))
             {
-                if (b == (byte)'%' || b == (byte)'"' || b < 0x20 || b >= 0x7F)
-                    builder.Append('%').Append(b.ToString("x2", CultureInfo.InvariantCulture));
-                else
-                    builder.Append((char)b);
+                _ = b is ((byte)'%') or ((byte)'"') or < 0x20 or >= 0x7F
+                    ? builder.Append('%').Append(b.ToString("x2", CultureInfo.InvariantCulture))
+                    : builder.Append((char)b);
             }
             return builder.Append('"').ToString();
         }

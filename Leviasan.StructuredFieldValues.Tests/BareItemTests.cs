@@ -39,18 +39,18 @@ namespace Leviasan.StructuredFieldValues.Tests
             Assert.NotEqual(new SfBareDecimal(1.5m), new SfBareDecimal(1.6m));
             Assert.Equal(new SfBareDecimal(1.5m).GetHashCode(), new SfBareDecimal(1.5m).GetHashCode());
             Assert.False(new SfBareDecimal(1m).Equals(null));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new SfBareDecimal(-1_000_000_000_000m));
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => new SfBareDecimal(-1_000_000_000_000m));
         }
 
         [Fact]
         public void String_NonPrintable_Throws()
         {
-            Assert.Throws<ArgumentException>(() => new SfBareString("a\tb"));
-            Assert.Throws<ArgumentException>(() => new SfBareString("é"));
+            _ = Assert.Throws<ArgumentException>(() => new SfBareString("a\tb"));
+            _ = Assert.Throws<ArgumentException>(() => new SfBareString("é"));
         }
 
         [Fact]
-        public void String_ToString_EscapesQuoteAndBackslash()  => Assert.Equal("\"a\\\"b\\\\c\"", new SfBareString("a\"b\\c").ToString());
+        public void String_ToString_EscapesQuoteAndBackslash() => Assert.Equal("\"a\\\"b\\\\c\"", new SfBareString("a\"b\\c").ToString());
 
         [Theory]
         [InlineData("foo123/456", true)]
@@ -64,7 +64,9 @@ namespace Leviasan.StructuredFieldValues.Tests
         {
             Assert.Equal(valid, StructuredFieldSyntax.IsValidToken(value));
             if (!valid)
-                Assert.Throws<ArgumentException>(() => new SfBareToken(value));
+            {
+                _ = Assert.Throws<ArgumentException>(() => new SfBareToken(value));
+            }
         }
 
         [Fact]
@@ -81,8 +83,8 @@ namespace Leviasan.StructuredFieldValues.Tests
         public void ByteSequence_HashAndNull()
         {
             Assert.Equal(new SfBareByteSequence([1, 2]).GetHashCode(), new SfBareByteSequence([1, 2]).GetHashCode());
-            Assert.Throws<ArgumentNullException>(() => new SfBareByteSequence(null!));
-            Assert.False(new SfBareByteSequence([1]).Equals((SfBareItem?)null));
+            _ = Assert.Throws<ArgumentNullException>(() => new SfBareByteSequence(null!));
+            Assert.False(new SfBareByteSequence([1]).Equals(null));
             Assert.False(new SfBareByteSequence([1]).Equals(new SfBareBoolean(true)));
         }
 
@@ -106,16 +108,16 @@ namespace Leviasan.StructuredFieldValues.Tests
         public void Date_Range()
         {
             Assert.Equal(SfBareInteger.MaxInteger, new SfBareDate(SfBareInteger.MaxInteger).Value);
-            Assert.Throws<ArgumentOutOfRangeException>(() => new SfBareDate(SfBareInteger.MaxInteger + 1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new SfBareDate(SfBareInteger.MinInteger - 1));
-            Assert.Throws<InvalidOperationException>(() => new SfBareDate(SfBareInteger.MaxInteger).ToDateTimeOffset());
-            Assert.Throws<InvalidOperationException>(() => new SfBareDate(SfBareInteger.MinInteger).ToDateTimeOffset());
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => new SfBareDate(SfBareInteger.MaxInteger + 1));
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => new SfBareDate(SfBareInteger.MinInteger - 1));
+            _ = Assert.Throws<InvalidOperationException>(() => new SfBareDate(SfBareInteger.MaxInteger).ToDateTimeOffset());
+            _ = Assert.Throws<InvalidOperationException>(() => new SfBareDate(SfBareInteger.MinInteger).ToDateTimeOffset());
         }
 
         [Fact]
         public void Date_RoundTripsDateTimeOffset()
         {
-            var date = new SfBareDate(DateTimeOffset.FromUnixTimeSeconds(1659578233));
+            SfBareDate date = new(DateTimeOffset.FromUnixTimeSeconds(1659578233));
             Assert.Equal(1659578233, date.Value);
             Assert.Equal("@1659578233", date.ToString());
             Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(1659578233), date.ToDateTimeOffset());
@@ -168,7 +170,9 @@ namespace Leviasan.StructuredFieldValues.Tests
                 foreach (SfBareItem b in items)
                 {
                     if (!ReferenceEquals(a, b))
+                    {
                         Assert.NotEqual(a, b);
+                    }
                 }
             }
         }
@@ -191,13 +195,13 @@ namespace Leviasan.StructuredFieldValues.Tests
         [Fact]
         public void NullArguments_Throw()
         {
-            Assert.Throws<ArgumentNullException>(() => new SfBareString(null!));
-            Assert.Throws<ArgumentNullException>(() => new SfBareToken(null!));
-            Assert.Throws<ArgumentNullException>(() => new SfBareDisplayString(null!));
-            Assert.Throws<ArgumentNullException>(() => new SfList(null!));
-            Assert.Throws<ArgumentNullException>(() => new SfInnerList(null!));
-            Assert.Throws<ArgumentNullException>(() => new SfDictionary(null!));
-            Assert.Throws<ArgumentNullException>(() => new SfParameters(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => new SfBareString(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => new SfBareToken(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => new SfBareDisplayString(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => new SfList(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => new SfInnerList(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => new SfDictionary(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => new SfParameters(null!));
         }
 
         [Fact]
@@ -207,8 +211,8 @@ namespace Leviasan.StructuredFieldValues.Tests
             SfInnerList inner = new([new SfItem(new SfBareInteger(1))]);
             foreach (object _ in (IEnumerable)list) { }
             foreach (object _ in (IEnumerable)inner) { }
-            Assert.Throws<ArgumentOutOfRangeException>(() => list[1]);
-            Assert.Throws<ArgumentOutOfRangeException>(() => inner[1]);
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => list[1]);
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => inner[1]);
             Assert.Empty(SfList.Empty);
         }
     }

@@ -10,9 +10,9 @@ namespace Leviasan.StructuredFieldValues.Tests
         [Fact]
         public void Null_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() => StructuredFieldSerializer.SerializeItem(null!));
-            Assert.Throws<ArgumentNullException>(() => StructuredFieldSerializer.SerializeList(null!));
-            Assert.Throws<ArgumentNullException>(() => StructuredFieldSerializer.SerializeDictionary(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => StructuredFieldSerializer.SerializeItem(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => StructuredFieldSerializer.SerializeList(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => StructuredFieldSerializer.SerializeDictionary(null!));
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Leviasan.StructuredFieldValues.Tests
         public void Serializer_UnknownMember_Throws()
         {
             SfList list = new([new UnknownMember()]);
-            Assert.Throws<InvalidOperationException>(() => StructuredFieldSerializer.SerializeList(list));
+            _ = Assert.Throws<InvalidOperationException>(() => StructuredFieldSerializer.SerializeList(list));
         }
 
         [Fact]

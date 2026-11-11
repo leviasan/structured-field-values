@@ -54,13 +54,19 @@ namespace Leviasan.StructuredFieldValues
                     members.Add(new KeyValuePair<string, SfMember>(key, member));
                     SkipSpaceAndHTab(ref cursor);
                     if (cursor.AtEnd)
+                    {
                         break;
+                    }
                     if (cursor.Current != ',')
+                    {
                         throw new FormatException($"Expected ',' at position {cursor.Position}");
+                    }
                     cursor.Advance();
                     SkipSpaceAndHTab(ref cursor);
                     if (cursor.AtEnd)
+                    {
                         throw new FormatException("Trailing comma with no following member");
+                    }
                 }
                 return new SfDictionary(members);
             }
@@ -79,9 +85,7 @@ namespace Leviasan.StructuredFieldValues
             SkipSpace(ref cursor);
             SfItem result = ParseItemInner(ref cursor);
             SkipSpace(ref cursor);
-            if (!cursor.AtEnd)
-                throw new FormatException($"Unexpected trailing data at position {cursor.Position}");
-            return result;
+            return !cursor.AtEnd ? throw new FormatException($"Unexpected trailing data at position {cursor.Position}") : result;
         }
         /// <summary>
         /// Parses a string as an RFC 9651 top-level <see cref="SfList"/>.
@@ -106,13 +110,19 @@ namespace Leviasan.StructuredFieldValues
                     members.Add(ParseItemOrInnerList(ref cursor));
                     SkipSpaceAndHTab(ref cursor);
                     if (cursor.AtEnd)
+                    {
                         break;
+                    }
                     if (cursor.Current != ',')
+                    {
                         throw new FormatException($"Expected ',' at position {cursor.Position}");
+                    }
                     cursor.Advance();
                     SkipSpaceAndHTab(ref cursor);
                     if (cursor.AtEnd)
+                    {
                         throw new FormatException("Trailing comma with no following member");
+                    }
                 }
                 return new SfList(members);
             }
@@ -127,25 +137,32 @@ namespace Leviasan.StructuredFieldValues
         private static SfBareItem ParseBareItem(ref StringCursor cursor)
         {
             if (cursor.AtEnd)
+            {
                 throw new FormatException("Unexpected end of input while parsing a bare item");
+            }
 
             char c = cursor.Current;
             if (c == '-' || char.IsAsciiDigit(c))
+            {
                 return ParseNumber(ref cursor);
+            }
             if (c == '"')
+            {
                 return ParseString(ref cursor);
+            }
             if (char.IsAsciiLetter(c) || c == '*')
+            {
                 return ParseToken(ref cursor);
-            if (c == ':')
-                return ParseByteSequence(ref cursor);
-            if (c == '?')
-                return ParseBoolean(ref cursor);
-            if (c == '@')
-                return ParseDate(ref cursor);
-            if (c == '%')
-                return ParseDisplayString(ref cursor);
-
-            throw new FormatException($"Unexpected character '{c}' at position {cursor.Position} while parsing a bare item");
+            }
+            return c == ':'
+                ? ParseByteSequence(ref cursor)
+                : c == '?'
+                ? ParseBoolean(ref cursor)
+                : c == '@'
+                ? ParseDate(ref cursor)
+                : c == '%'
+                ? (SfBareItem)ParseDisplayString(ref cursor)
+                : throw new FormatException($"Unexpected character '{c}' at position {cursor.Position} while parsing a bare item");
         }
         /// <summary>
         /// Parses a structured field boolean token from the current cursor position,
@@ -159,7 +176,9 @@ namespace Leviasan.StructuredFieldValues
         {
             cursor.Expect('?');
             if (cursor.AtEnd || (cursor.Current != '0' && cursor.Current != '1'))
+            {
                 throw new FormatException($"Expected '0' or '1' after '?' at position {cursor.Position}");
+            }
             bool value = cursor.Current == '1';
             cursor.Advance();
             return new SfBareBoolean(value);
@@ -220,9 +239,9 @@ namespace Leviasan.StructuredFieldValues
         private static SfBareDate ParseDate(ref StringCursor cursor)
         {
             cursor.Expect('@');
-            if (ParseNumber(ref cursor) is not SfBareInteger number)
-                throw new FormatException("sf-date requires an integer value after '@'");
-            return new SfBareDate(number.Value);
+            return ParseNumber(ref cursor) is not SfBareInteger number
+                ? throw new FormatException("sf-date requires an integer value after '@'")
+                : new SfBareDate(number.Value);
         }
         /// <summary>
         /// Parses an sf-displaystring token from the current cursor position and decodes its UTF-8 content,
@@ -263,22 +282,24 @@ namespace Leviasan.StructuredFieldValues
                     if (c == '%')
                     {
                         if (cursor.RemainingLength < 2)
+                        {
                             throw new FormatException("Unterminated percent-encoding in sf-displaystring");
+                        }
                         int hi = HexValue(cursor.Current);
                         cursor.Advance();
                         int lo = HexValue(cursor.Current);
                         cursor.Advance();
                         if (hi < 0 || lo < 0)
+                        {
                             throw new FormatException("Invalid percent-encoding in sf-displaystring");
+                        }
                         buffer[byteCount++] = (byte)((hi << 4) | lo);
-                    }
-                    else if (c < 0x20 || c > 0x7E)
-                    {
-                        throw new FormatException("sf-displaystring may only contain printable ASCII characters and percent-encoded bytes");
                     }
                     else
                     {
-                        buffer[byteCount++] = (byte)c;
+                        buffer[byteCount++] = c is < (char)0x20 or > (char)0x7E
+                            ? throw new FormatException("sf-displaystring may only contain printable ASCII characters and percent-encoded bytes")
+                            : (byte)c;
                     }
                 }
                 try
@@ -296,12 +317,15 @@ namespace Leviasan.StructuredFieldValues
             }
 
             // Helper method to convert a hexadecimal character to its integer value, returning -1 for invalid characters
-            static int HexValue(char c) => c switch
+            static int HexValue(char c)
             {
-                >= '0' and <= '9' => c - '0',
-                >= 'a' and <= 'f' => c - 'a' + 10,
-                _ => -1,
-            };
+                return c switch
+                {
+                    >= '0' and <= '9' => c - '0',
+                    >= 'a' and <= 'f' => c - 'a' + 10,
+                    _ => -1,
+                };
+            }
         }
         /// <summary>
         /// Parses an inner list enclosed in parentheses, including its items and trailing parameters,
@@ -330,7 +354,9 @@ namespace Leviasan.StructuredFieldValues
                 SfItem item = ParseItemInner(ref cursor);
                 items.Add(item);
                 if (!cursor.AtEnd && cursor.Current != ' ' && cursor.Current != ')')
+                {
                     throw new FormatException($"Expected ' ' or ')' at position {cursor.Position}");
+                }
             }
         }
         /// <summary>
@@ -352,12 +378,7 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="cursor">The string cursor positioned at the next member to parse; advanced past the parsed content.</param>
         /// <returns>An <see cref="SfMember"/> representing the parsed <see cref="SfInnerList"/> or <see cref="SfItem"/>.</returns>
-        private static SfMember ParseItemOrInnerList(ref StringCursor cursor)
-        {
-            if (!cursor.AtEnd && cursor.Current == '(')
-                return ParseInnerList(ref cursor);
-            return ParseItemInner(ref cursor);
-        }
+        private static SfMember ParseItemOrInnerList(ref StringCursor cursor) => !cursor.AtEnd && cursor.Current == '(' ? ParseInnerList(ref cursor) : ParseItemInner(ref cursor);
         /// <summary>
         /// Parses a key token from the current cursor position,
         /// per RFC 9651 section <see href="https://www.rfc-editor.org/rfc/rfc9651.html#section-4.2.3.3">4.2.3.3</see>.
@@ -370,10 +391,14 @@ namespace Leviasan.StructuredFieldValues
         {
             int start = cursor.Position;
             if (cursor.AtEnd || (!char.IsAsciiLetterLower(cursor.Current) && cursor.Current != '*'))
+            {
                 throw new FormatException($"Expected a lowercase ASCII letter or '*' at position {cursor.Position}");
+            }
             cursor.Advance();
             while (!cursor.AtEnd && (char.IsAsciiLetterLower(cursor.Current) || char.IsAsciiDigit(cursor.Current) || cursor.Current is '_' or '-' or '.' or '*'))
+            {
                 cursor.Advance();
+            }
             return cursor.Slice(start, cursor.Position - start).ToString();
         }
         /// <summary>
@@ -408,7 +433,9 @@ namespace Leviasan.StructuredFieldValues
             {
                 ++digits;
                 if (digits > SfBareInteger.MaxIntegerDigits)
+                {
                     throw new FormatException($"Numeric component has too many digits (max {SfBareInteger.MaxIntegerDigits} for integer)");
+                }
                 cursor.Advance();
             }
             // Check for a decimal point to determine if this is a decimal number
@@ -417,7 +444,9 @@ namespace Leviasan.StructuredFieldValues
             {
                 isDecimal = true;
                 if (digits > SfBareDecimal.MaxDecimalIntegerDigits)
+                {
                     throw new FormatException($"Decimal's integer component must have at most {SfBareDecimal.MaxDecimalIntegerDigits} digits");
+                }
 
                 cursor.Advance();
                 int fractionalDigits = 0;
@@ -425,11 +454,15 @@ namespace Leviasan.StructuredFieldValues
                 {
                     ++fractionalDigits;
                     if (fractionalDigits > SfBareDecimal.MaxDecimalFractionalDigits)
+                    {
                         throw new FormatException($"Decimal's fractional component must have at most {SfBareDecimal.MaxDecimalFractionalDigits} digits");
+                    }
                     cursor.Advance();
                 }
                 if (fractionalDigits == 0)
+                {
                     throw new FormatException("Decimal requires at least one fractional digit after '.'");
+                }
             }
             // Slice the span representing the parsed number
             ReadOnlySpan<char> text = cursor.Slice(start, cursor.Position - start);
@@ -501,18 +534,21 @@ namespace Leviasan.StructuredFieldValues
                 {
                     cursor.Advance();
                     if (cursor.AtEnd)
+                    {
                         throw new FormatException("Unterminated escape sequence in sf-string");
-                    if (cursor.Current != '"' && cursor.Current != '\\')
+                    }
+
+                    if (cursor.Current is not '"' and not '\\')
+                    {
                         throw new FormatException($"Invalid escape sequence '\\{cursor.Current}' in sf-string");
-                    builder.Append(cursor.Current);
-                }
-                else if (!SfBareString.IsValidChar(cursor.Current))
-                {
-                    throw new FormatException($"sf-string contains a non-printable-ASCII character at position {cursor.Position}");
+                    }
+                    _ = builder.Append(cursor.Current);
                 }
                 else
                 {
-                    builder.Append(cursor.Current);
+                    _ = !SfBareString.IsValidChar(cursor.Current)
+                        ? throw new FormatException($"sf-string contains a non-printable-ASCII character at position {cursor.Position}")
+                        : builder.Append(cursor.Current);
                 }
                 cursor.Advance();
             }
@@ -529,7 +565,9 @@ namespace Leviasan.StructuredFieldValues
             int start = cursor.Position;
             cursor.Advance();
             while (!cursor.AtEnd && StructuredFieldSyntax.IsTokenChar(cursor.Current))
+            {
                 cursor.Advance();
+            }
             return new SfBareToken(cursor.Slice(start, cursor.Position - start).ToString());
         }
         /// <summary>
@@ -540,7 +578,9 @@ namespace Leviasan.StructuredFieldValues
         private static void SkipSpace(ref StringCursor cursor)
         {
             while (!cursor.AtEnd && cursor.Current == ' ')
+            {
                 cursor.Advance();
+            }
         }
         /// <summary>
         /// Advances the cursor past consecutive space and tab characters.
@@ -550,7 +590,9 @@ namespace Leviasan.StructuredFieldValues
         private static void SkipSpaceAndHTab(ref StringCursor cursor)
         {
             while (!cursor.AtEnd && (cursor.Current == ' ' || cursor.Current == '\t'))
+            {
                 cursor.Advance();
+            }
         }
 
         /// <summary>
@@ -606,7 +648,9 @@ namespace Leviasan.StructuredFieldValues
             public void Expect(char c)
             {
                 if (AtEnd || Current != c)
+                {
                     throw new FormatException($"Expected '{c}' at position {Position}");
+                }
                 Advance();
             }
         }

@@ -14,7 +14,7 @@ namespace Leviasan.StructuredFieldValues
         /// <returns><see langword="true"/> if <paramref name="value"/> is a valid key; otherwise, <see langword="false"/>.</returns>
         public static bool IsValidKey(ReadOnlySpan<char> value)
         {
-            if (value.IsEmpty || !char.IsAsciiLetterLower(value[0]) && value[0] != '*')
+            if (value.IsEmpty || (!char.IsAsciiLetterLower(value[0]) && value[0] != '*'))
             {
                 return false;
             }
@@ -22,7 +22,9 @@ namespace Leviasan.StructuredFieldValues
             {
                 char c = value[index];
                 if (!char.IsAsciiLetterLower(c) && !char.IsAsciiDigit(c) && c != '_' && c != '-' && c != '.' && c != '*')
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -33,14 +35,16 @@ namespace Leviasan.StructuredFieldValues
         /// <returns><see langword="true"/> if <paramref name="value"/> is a valid sf-token; otherwise, <see langword="false"/>.</returns>
         public static bool IsValidToken(ReadOnlySpan<char> value)
         {
-            if (value.IsEmpty || !char.IsAsciiLetter(value[0]) && value[0] != '*')
+            if (value.IsEmpty || (!char.IsAsciiLetter(value[0]) && value[0] != '*'))
             {
                 return false;
             }
             for (int index = 1; index < value.Length; index++)
             {
                 if (!IsTokenChar(value[index]))
+                {
                     return false;
+                }
             }
             return true;
         }

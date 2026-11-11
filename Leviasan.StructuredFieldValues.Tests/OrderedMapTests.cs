@@ -35,7 +35,7 @@ namespace Leviasan.StructuredFieldValues.Tests
             Assert.True(map.TryGetValue("a", out SfBareItem? value));
             Assert.Equal(new SfBareInteger(1), value);
             Assert.False(map.TryGetValue("z", out _));
-            Assert.Throws<KeyNotFoundException>(() => map["z"]);
+            _ = Assert.Throws<KeyNotFoundException>(() => map["z"]);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Leviasan.StructuredFieldValues.Tests
             SfList list = new([new SfItem(new SfBareInteger(1)), new SfItem(new SfBareInteger(2))]);
             Assert.Equal(2, list.Count);
             SfInnerList inner = new([new SfItem(new SfBareInteger(1))]);
-            Assert.Single(inner);
+            _ = Assert.Single(inner);
             Assert.Equal(new SfBareInteger(1), inner[0].Value);
         }
 
@@ -56,11 +56,11 @@ namespace Leviasan.StructuredFieldValues.Tests
         public void OrderedMap_Validation()
         {
             SfParameters map = new([]);
-            Assert.Throws<ArgumentNullException>(() => map.SetItem(null!, new SfBareInteger(1)));
-            Assert.Throws<ArgumentNullException>(() => map.SetItem("a", null!));
-            Assert.Throws<ArgumentException>(() => map.SetItem("A", new SfBareInteger(1)));
-            Assert.Throws<ArgumentException>(() => new SfParameters([new("1", new SfBareInteger(1))]));
-            Assert.Throws<ArgumentNullException>(() => map.TryGetValue(null!, out _));
+            _ = Assert.Throws<ArgumentNullException>(() => map.SetItem(null!, new SfBareInteger(1)));
+            _ = Assert.Throws<ArgumentNullException>(() => map.SetItem("a", null!));
+            _ = Assert.Throws<ArgumentException>(() => map.SetItem("A", new SfBareInteger(1)));
+            _ = Assert.Throws<ArgumentException>(() => new SfParameters([new("1", new SfBareInteger(1))]));
+            _ = Assert.Throws<ArgumentNullException>(() => map.TryGetValue(null!, out _));
         }
 
         [Fact]
@@ -70,7 +70,7 @@ namespace Leviasan.StructuredFieldValues.Tests
             Assert.Equal(["a", "b"], map.Keys);
             Assert.Equal([new SfBareInteger(1), new SfBareInteger(2)], map.Values);
             Assert.Equal("b", map[1].Key);
-            Assert.Throws<ArgumentOutOfRangeException>(() => map[2]);
+            _ = Assert.Throws<ArgumentOutOfRangeException>(() => map[2]);
 
             IReadOnlyDictionary<string, SfBareItem> dict = map;
             Assert.True(dict.ContainsKey("a"));
@@ -79,7 +79,9 @@ namespace Leviasan.StructuredFieldValues.Tests
             IEnumerable nonGeneric = map;
             int count = 0;
             foreach (object _ in nonGeneric)
+            {
                 count++;
+            }
             Assert.Equal(2, count);
         }
     }
