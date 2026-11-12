@@ -146,15 +146,11 @@ namespace Leviasan.StructuredFieldValues
             {
                 return ParseNumber(ref cursor);
             }
-            if (c == '"')
-            {
-                return ParseString(ref cursor);
-            }
-            if (char.IsAsciiLetter(c) || c == '*')
-            {
-                return ParseToken(ref cursor);
-            }
-            return c == ':'
+            return c == '"'
+                ? ParseString(ref cursor)
+                : char.IsAsciiLetter(c) || c == '*'
+                ? ParseToken(ref cursor)
+                : c == ':'
                 ? ParseByteSequence(ref cursor)
                 : c == '?'
                 ? ParseBoolean(ref cursor)
