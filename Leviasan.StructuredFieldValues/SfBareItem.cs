@@ -36,7 +36,6 @@ namespace Leviasan.StructuredFieldValues
         {
             return left is null ? right is null : left.Equals(right);
         }
-
         /// <summary>
         /// Determines whether two bare items are not equal.
         /// </summary>
@@ -98,7 +97,12 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="value">The bare integer to convert.</param>
         /// <returns>An <see cref="SfItem"/> with the specified bare integer value and no parameters.</returns>
-        public static implicit operator SfItem(SfBareInteger value) => new(value, null);
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is <see langword="null"/>.</exception>
+        public static implicit operator SfItem(SfBareInteger value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            return new(value, null);
+        }
         /// <summary>
         /// Explicitly converts a <see cref="long"/> to an <see cref="SfBareInteger"/>.
         /// </summary>
@@ -178,9 +182,14 @@ namespace Leviasan.StructuredFieldValues
         /// <summary>
         /// Implicitly converts an <see cref="SfBareDecimal"/> to an <see cref="SfItem"/>.
         /// </summary>
-        /// <param name="value">The bare decimal value to convert.</param>
+        /// <param name="value">The bare decimal to convert.</param>
         /// <returns>An <see cref="SfItem"/> with the specified bare decimal value and no parameters.</returns>
-        public static implicit operator SfItem(SfBareDecimal value) => new(value, null);
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is <see langword="null"/>.</exception>
+        public static implicit operator SfItem(SfBareDecimal value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            return new(value, null);
+        }
         /// <summary>
         /// Explicitly converts a <see cref="decimal"/> to an <see cref="SfBareDecimal"/>.
         /// </summary>
@@ -263,7 +272,12 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="value">The bare string value to convert.</param>
         /// <returns>An <see cref="SfItem"/> with the specified bare string value and no parameters.</returns>
-        public static implicit operator SfItem(SfBareString value) => new(value, null);
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is <see langword="null"/>.</exception>
+        public static implicit operator SfItem(SfBareString value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            return new(value, null);
+        }
         /// <summary>
         /// Explicitly converts a <see cref="string"/> to an <see cref="SfBareString"/>.
         /// </summary>
@@ -324,7 +338,12 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="value">The bare token value to convert.</param>
         /// <returns>An <see cref="SfItem"/> with the specified bare token value and no parameters.</returns>
-        public static implicit operator SfItem(SfBareToken value) => new(value, null);
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is <see langword="null"/>.</exception>
+        public static implicit operator SfItem(SfBareToken value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            return new(value, null);
+        }
         /// <summary>
         /// Explicitly converts a <see cref="string"/> to an <see cref="SfBareToken"/>.
         /// </summary>
@@ -386,7 +405,12 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="value">The bare byte sequence value to convert.</param>
         /// <returns>An <see cref="SfItem"/> with the specified bare byte sequence value and no parameters.</returns>
-        public static implicit operator SfItem(SfBareByteSequence value) => new(value, null);
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is <see langword="null"/>.</exception>
+        public static implicit operator SfItem(SfBareByteSequence value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            return new(value, null);
+        }
         /// <summary>
         /// Explicitly converts a <see cref="T:System.Byte[]"/> to an <see cref="SfBareByteSequence"/>.
         /// </summary>
@@ -434,7 +458,12 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="value">The bare boolean value to convert.</param>
         /// <returns>An <see cref="SfItem"/> with the specified bare boolean value and no parameters.</returns>
-        public static implicit operator SfItem(SfBareBoolean value) => new(value, null);
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is <see langword="null"/>.</exception>
+        public static implicit operator SfItem(SfBareBoolean value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            return new(value, null);
+        }
         /// <summary>
         /// Implicitly converts a <see cref="bool"/> to an <see cref="SfBareBoolean"/>.
         /// </summary>
@@ -512,7 +541,12 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="value">The bare date value to convert.</param>
         /// <returns>An <see cref="SfItem"/> with the specified bare date value and no parameters.</returns>
-        public static implicit operator SfItem(SfBareDate value) => new(value, null);
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is <see langword="null"/>.</exception>
+        public static implicit operator SfItem(SfBareDate value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            return new(value, null);
+        }
         /// <summary>
         /// Explicitly converts a <see cref="long"/> to an <see cref="SfBareDate"/>.
         /// </summary>
@@ -594,7 +628,12 @@ namespace Leviasan.StructuredFieldValues
         /// </summary>
         /// <param name="value">The bare display string value to convert.</param>
         /// <returns>An <see cref="SfItem"/> with the specified bare display string value and no parameters.</returns>
-        public static implicit operator SfItem(SfBareDisplayString value) => new(value, null);
+        /// <exception cref="ArgumentNullException">The <paramref name="value"/> is <see langword="null"/>.</exception>
+        public static implicit operator SfItem(SfBareDisplayString value)
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            return new(value, null);
+        }
         /// <summary>
         /// Explicitly converts a <see cref="string"/> to an <see cref="SfBareDisplayString"/>.
         /// </summary>

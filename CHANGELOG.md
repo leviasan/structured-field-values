@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - Unreleased
 
 ### Added
-- Implicit conversions from every concrete bare item (`SfBareInteger`, `SfBareDecimal`, `SfBareString`, `SfBareToken`, `SfBareByteSequence`, `SfBareBoolean`, `SfBareDate`, `SfBareDisplayString`) to `SfItem` without parameters. The `new SfItem(...)` wrapper can now be omitted when building dictionaries, lists and inner lists.
 - Parameterless constructors for `SfDictionary` and `SfParameters` that create an empty instance.
+- Implicit conversions from every concrete bare item (`SfBareInteger`, `SfBareDecimal`, `SfBareString`, `SfBareToken`, `SfBareByteSequence`, `SfBareBoolean`, `SfBareDate`, `SfBareDisplayString`) to `SfItem` without parameters. The `new SfItem(...)` wrapper can now be omitted when building dictionaries, lists and inner lists.
 - Conversion operators between concrete bare items and their underlying values. Wrapper-to-value conversions are implicit (`SfBareDate` to `DateTimeOffset` is explicit because it can throw); value-to-wrapper conversions are explicit because they validate input (`bool` to `SfBareBoolean` is implicit).
 
 ## [1.0.0] - 2026-10-29
