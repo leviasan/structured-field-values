@@ -15,7 +15,7 @@ Usage and API are described in the [package README](Leviasan.StructuredFieldValu
 | Path | Description |
 |---|---|
 | `Leviasan.StructuredFieldValues` | The library |
-| `Leviasan.StructuredFieldValues.Tests` | xUnit tests, including the official conformance suite |
+| `Leviasan.StructuredFieldValues.Tests` | xunit.v3 tests, including the official conformance suite |
 
 ## Getting the sources
 
@@ -35,14 +35,16 @@ Without the submodule, `Leviasan.StructuredFieldValues.Tests/StructuredFieldTest
 
 ## Running the tests
 
+The tests use xunit.v3 on Microsoft.Testing.Platform, enabled by `global.json`.
+
 ```powershell
-dotnet test
+dotnet test --solution structured-field-values.slnx
 ```
 
 With code coverage:
 
 ```powershell
-dotnet test --collect:"XPlat Code Coverage"
+dotnet test --solution structured-field-values.slnx --coverage --coverage-output-format cobertura
 ```
 
 ## Conformance tests
@@ -59,7 +61,7 @@ Cases marked `can_fail` in the suite are optional (SHOULD) requirements, so a fa
 
 ```powershell
 git submodule update --remote Leviasan.StructuredFieldValues.Tests/StructuredFieldTests
-dotnet test
+dotnet test --solution structured-field-values.slnx
 git add Leviasan.StructuredFieldValues.Tests/StructuredFieldTests
 git commit -m "Update structured-field-tests"
 ```
