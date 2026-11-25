@@ -5,12 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - Unreleased
+## [1.1.0] - 2026-11-25
 
 ### Added
 - Parameterless constructors for `SfDictionary` and `SfParameters` that create an empty instance.
 - Implicit conversions from every concrete bare item (`SfBareInteger`, `SfBareDecimal`, `SfBareString`, `SfBareToken`, `SfBareByteSequence`, `SfBareBoolean`, `SfBareDate`, `SfBareDisplayString`) to `SfItem` without parameters. The `new SfItem(...)` wrapper can now be omitted when building dictionaries, lists and inner lists.
 - Conversion operators between concrete bare items and their underlying values. Wrapper-to-value conversions are implicit (`SfBareDate` to `DateTimeOffset` is explicit because it can throw); value-to-wrapper conversions are explicit because they validate input (`bool` to `SfBareBoolean` is implicit).
+
+### Changed
+- CI uploads code coverage and test results to Codecov.
+- The test project is migrated from xunit 2.9.3 to xunit.v3 and runs on Microsoft.Testing.Platform (enabled through a new `global.json`).
 
 ## [1.0.0] - 2026-10-29
 
