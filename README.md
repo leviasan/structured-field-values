@@ -2,8 +2,9 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Leviasan.StructuredFieldValues.svg)](https://www.nuget.org/packages/Leviasan.StructuredFieldValues)
 [![Downloads](https://img.shields.io/nuget/dt/Leviasan.StructuredFieldValues.svg)](https://www.nuget.org/packages/Leviasan.StructuredFieldValues)
-[![CI](https://github.com/leviasan/structured-field-values/actions/workflows/ci.yml/badge.svg)](https://github.com/leviasan/structured-field-values/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/github/license/leviasan/structured-field-values.svg)](LICENSE.txt)
+[![CI](https://github.com/leviasan/structured-field-values/actions/workflows/ci.yml/badge.svg)](https://github.com/leviasan/structured-field-values/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/leviasan/structured-field-values/graph/badge.svg)](https://codecov.io/gh/leviasan/structured-field-values)
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4.svg)](https://dotnet.microsoft.com/)
 [![RFC 9651](https://img.shields.io/badge/RFC-9651-blue.svg)](https://www.rfc-editor.org/rfc/rfc9651.html)
 
