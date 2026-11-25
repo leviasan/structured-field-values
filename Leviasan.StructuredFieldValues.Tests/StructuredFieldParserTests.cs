@@ -8,9 +8,9 @@ namespace Leviasan.StructuredFieldValues.Tests
         [Fact]
         public void Null_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() => StructuredFieldParser.ParseItem(null!));
-            Assert.Throws<ArgumentNullException>(() => StructuredFieldParser.ParseList(null!));
-            Assert.Throws<ArgumentNullException>(() => StructuredFieldParser.ParseDictionary(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => StructuredFieldParser.ParseItem(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => StructuredFieldParser.ParseList(null!));
+            _ = Assert.Throws<ArgumentNullException>(() => StructuredFieldParser.ParseDictionary(null!));
         }
 
         [Theory]
@@ -26,10 +26,7 @@ namespace Leviasan.StructuredFieldValues.Tests
         [InlineData("-0.001", "-0.001")]
         [InlineData("999999999999.999", "999999999999.999")]
         [InlineData("-0.0", "0.0")]
-        public void Item_Decimal(string input, string expected)
-        {
-            Assert.Equal(decimal.Parse(expected, System.Globalization.CultureInfo.InvariantCulture), Assert.IsType<SfBareDecimal>(StructuredFieldParser.ParseItem(input).Value).Value);
-        }
+        public void Item_Decimal(string input, string expected) => Assert.Equal(decimal.Parse(expected, System.Globalization.CultureInfo.InvariantCulture), Assert.IsType<SfBareDecimal>(StructuredFieldParser.ParseItem(input).Value).Value);
 
         [Theory]
         [InlineData("1000000000000000")]
@@ -178,12 +175,12 @@ namespace Leviasan.StructuredFieldValues.Tests
         public void List_InnerLists()
         {
             SfList list = StructuredFieldParser.ParseList("(a b;x=1 c);y, (), (1)");
-            var first = Assert.IsType<SfInnerList>(list[0]);
+            SfInnerList first = Assert.IsType<SfInnerList>(list[0]);
             Assert.Equal(3, first.Count);
             Assert.Equal(new SfBareInteger(1), first[1].Parameters["x"]);
             Assert.Equal(new SfBareBoolean(true), first.Parameters["y"]);
             Assert.Empty(Assert.IsType<SfInnerList>(list[1]));
-            Assert.Single(Assert.IsType<SfInnerList>(list[2]));
+            _ = Assert.Single(Assert.IsType<SfInnerList>(list[2]));
         }
 
         [Theory]
@@ -270,16 +267,16 @@ namespace Leviasan.StructuredFieldValues.Tests
         public void Parser_ListWithTabSeparators_AndTrailingSpaces()
         {
             Assert.Equal(2, StructuredFieldParser.ParseList(" 1\t,\t2  ").Count);
-            Assert.Throws<FormatException>(() => StructuredFieldParser.ParseList("1\t"[..1] + "\t2"));
+            _ = Assert.Throws<FormatException>(() => StructuredFieldParser.ParseList("1\t"[..1] + "\t2"));
         }
 
         [Fact]
         public void Parser_DecimalBoundaries()
         {
             Assert.Equal(999_999_999_999.999m, ((SfBareDecimal)StructuredFieldParser.ParseItem("999999999999.999").Value).Value);
-            Assert.Throws<FormatException>(() => StructuredFieldParser.ParseItem("1.1234"));
-            Assert.Throws<FormatException>(() => StructuredFieldParser.ParseItem("1234567890123.5"));
-            Assert.Throws<FormatException>(() => StructuredFieldParser.ParseItem("1234567890123456"));
+            _ = Assert.Throws<FormatException>(() => StructuredFieldParser.ParseItem("1.1234"));
+            _ = Assert.Throws<FormatException>(() => StructuredFieldParser.ParseItem("1234567890123.5"));
+            _ = Assert.Throws<FormatException>(() => StructuredFieldParser.ParseItem("1234567890123456"));
         }
 
         [Fact]
@@ -289,7 +286,7 @@ namespace Leviasan.StructuredFieldValues.Tests
             Assert.Equal([1, 2], ((SfBareByteSequence)StructuredFieldParser.ParseItem(":AQI:").Value).Value);
             Assert.Equal([1], ((SfBareByteSequence)StructuredFieldParser.ParseItem(":AQ==:").Value).Value);
             Assert.Equal([1], ((SfBareByteSequence)StructuredFieldParser.ParseItem(":AQ:").Value).Value);
-            Assert.Throws<FormatException>(() => StructuredFieldParser.ParseItem(":A=Q=:"));
+            _ = Assert.Throws<FormatException>(() => StructuredFieldParser.ParseItem(":A=Q=:"));
         }
     }
 }

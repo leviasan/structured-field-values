@@ -86,19 +86,38 @@ foreach (var (key, member) in dict)
 
 ### Building and serializing
 
+Bare items convert implicitly to an `SfItem` without parameters, so the `new SfItem(...)` wrapper can be omitted.
+This works for every concrete bare item: `SfBareInteger`, `SfBareDecimal`, `SfBareString`, `SfBareToken`, `SfBareByteSequence`, `SfBareBoolean`, `SfBareDate` and `SfBareDisplayString`.
+Bare items also convert to their underlying values implicitly (`long value = new SfBareInteger(1);`). The opposite direction is explicit because the value is validated.
+
 ```csharp
 SfDictionary dict = new(
 [
-    new("max-age", new SfItem(new SfBareInteger(3600))),
-    new("public", new SfItem(new SfBareBoolean(true))),
-    new("tags", new SfInnerList([new SfItem(new SfBareToken("a")), new SfItem(new SfBareToken("b"))])),
+	new("max-age", new SfBareInteger(3600)),
+	new("public", new SfBareBoolean(true)),
+	new("tags", new SfInnerList([new SfBareToken("a"), new SfBareToken("b")])),
 ]);
 
 string? header = StructuredFieldSerializer.SerializeDictionary(dict);
 // max-age=3600, public, tags=(a b)
 
+string number = StructuredFieldSerializer.SerializeItem(new SfBareInteger(42));
+// 42
+```
+
+To add parameters, create the `SfItem` explicitly:
+
+```csharp
 string item = StructuredFieldSerializer.SerializeItem(
-    new SfItem(new SfBareDate(DateTimeOffset.UtcNow), new SfParameters([new("src", new SfBareString("sensor"))])));
+	new SfItem(new SfBareDate(DateTimeOffset.UtcNow), new SfParameters([new("src", new SfBareString("sensor"))])));
+```
+
+`SfDictionary` and `SfParameters` also have parameterless constructors that create an empty instance:
+
+```csharp
+SfDictionary empty = new();
+string? none = StructuredFieldSerializer.SerializeDictionary(empty);
+// null
 ```
 
 `SerializeList` and `SerializeDictionary` return `null` for an empty value. In that case the header must not be sent, as RFC 9651 section 4.1 requires.

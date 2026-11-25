@@ -7,5 +7,11 @@ namespace Leviasan.StructuredFieldValues
     /// </summary>
     /// <remarks>See <see href="https://www.rfc-editor.org/rfc/rfc9651.html#section-3.2">RFC 9651 section 3.2</see>.</remarks>
     /// <param name="members">The ordered key/value members.</param>
-    public sealed class SfDictionary(IEnumerable<KeyValuePair<string, SfMember>> members) : SfOrderedMap<SfMember>(members) { }
+    public sealed class SfDictionary(IEnumerable<KeyValuePair<string, SfMember>> members) : SfOrderedMap<SfMember>(members)
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SfDictionary"/> class with an empty dictionary.
+        /// </summary>
+        public SfDictionary() : this([]) { }
+    }
 }

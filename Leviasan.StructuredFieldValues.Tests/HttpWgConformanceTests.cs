@@ -29,20 +29,24 @@ namespace Leviasan.StructuredFieldValues.Tests
 
             if (mustFail)
             {
-                Assert.True(error is FormatException, $"[{file}] '{name}': expected FormatException for '{raw}', got {(error?.GetType().Name ?? "success")}");
+                Assert.True(error is FormatException, $"[{file}] '{name}': expected FormatException for '{raw}', got {error?.GetType().Name ?? "success"}");
                 return;
             }
             if (error is not null)
             {
                 if (canFail)
+                {
                     return;
+                }
                 Assert.Fail($"[{file}] '{name}': unexpected {error.GetType().Name} for '{raw}': {error.Message}");
             }
 
             JsonElement expected = test.GetProperty("expected");
             object expectedModel = BuildAny(type, expected);
             if (!canFail)
+            {
                 Assert.True(StructurallyEqual(expectedModel, parsed!), $"[{file}] '{name}': parsed structure differs from expected for '{raw}'");
+            }
 
             string? canonical = Canonical(test, raw);
             Assert.Equal(canonical, SerializeAny(parsed!));
@@ -68,7 +72,9 @@ namespace Leviasan.StructuredFieldValues.Tests
             if (error is not null)
             {
                 if (canFail)
+                {
                     return;
+                }
                 Assert.Fail($"[{file}] '{name}': unexpected {error.GetType().Name}: {error.Message}");
             }
 
@@ -76,7 +82,9 @@ namespace Leviasan.StructuredFieldValues.Tests
                 ? string.Join(", ", r.EnumerateArray().Select(e => e.GetString()))
                 : null);
             if (!canFail)
+            {
                 Assert.Equal(canonical, actual);
+            }
         }
 
         private static string? Canonical(JsonElement test, string? raw)
@@ -130,7 +138,9 @@ namespace Leviasan.StructuredFieldValues.Tests
                 case JsonValueKind.Number:
                     string text = e.GetRawText();
                     if (text.Contains('.') || text.Contains('e') || text.Contains('E'))
+                    {
                         return new SfBareDecimal(decimal.Parse(text, NumberStyles.Float, CultureInfo.InvariantCulture));
+                    }
                     return new SfBareInteger(long.Parse(text, CultureInfo.InvariantCulture));
                 case JsonValueKind.Object:
                     string kind = e.GetProperty("__type").GetString()!;
@@ -192,7 +202,9 @@ namespace Leviasan.StructuredFieldValues.Tests
                 using JsonDocument doc = JsonDocument.Parse(File.ReadAllText(path));
                 int index = 0;
                 foreach (JsonElement test in doc.RootElement.EnumerateArray())
+                {
                     data.Add(file, index++, test.GetProperty("name").GetString()!);
+                }
             }
             return data;
         }

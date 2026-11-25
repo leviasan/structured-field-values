@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace Leviasan.StructuredFieldValues
 {
@@ -30,7 +29,9 @@ namespace Leviasan.StructuredFieldValues
         {
             ArgumentNullException.ThrowIfNull(members);
             foreach (KeyValuePair<string, TValue> member in members)
+            {
                 SetItem(member.Key, member.Value);
+            }
         }
 
         /// <summary>
@@ -44,7 +45,9 @@ namespace Leviasan.StructuredFieldValues
             ArgumentNullException.ThrowIfNull(key);
             ArgumentNullException.ThrowIfNull(value);
             if (!StructuredFieldSyntax.IsValidKey(key))
+            {
                 throw new ArgumentException($"The '{key}' is not a valid RFC 9651 key", nameof(key));
+            }
             _items[key] = value;
         }
 
