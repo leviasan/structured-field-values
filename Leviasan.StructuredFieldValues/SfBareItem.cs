@@ -32,17 +32,11 @@ namespace Leviasan.StructuredFieldValues
         /// <summary>
         /// Determines whether two bare items are equal.
         /// </summary>
-        public static bool operator ==(SfBareItem? left, SfBareItem? right)
-        {
-            return left is null ? right is null : left.Equals(right);
-        }
+        public static bool operator ==(SfBareItem? left, SfBareItem? right) => left is null ? right is null : left.Equals(right);
         /// <summary>
         /// Determines whether two bare items are not equal.
         /// </summary>
-        public static bool operator !=(SfBareItem? left, SfBareItem? right)
-        {
-            return !(left == right);
-        }
+        public static bool operator !=(SfBareItem? left, SfBareItem? right) => !(left == right);
     }
     /// <summary>
     /// Represents a sf-integer.

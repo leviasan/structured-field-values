@@ -68,8 +68,8 @@ namespace Leviasan.StructuredFieldValues.Tests
         [Fact]
         public void Date_FromDateTimeOffset_ToDateTimeOffset()
         {
-            var moment = DateTimeOffset.FromUnixTimeSeconds(1659578233);
-            var bare = (SfBareDate)moment;
+            DateTimeOffset moment = DateTimeOffset.FromUnixTimeSeconds(1659578233);
+            SfBareDate bare = (SfBareDate)moment;
             Assert.Equal(moment, (DateTimeOffset)bare);
             Assert.Equal(1659578233L, (long)bare);
         }
@@ -77,8 +77,8 @@ namespace Leviasan.StructuredFieldValues.Tests
         [Fact]
         public void Date_OutOfDateTimeOffsetRange_ExplicitThrows()
         {
-            var bare = (SfBareDate)999_999_999_999_999L;
-            Assert.ThrowsAny<Exception>(() => (DateTimeOffset)bare);
+            SfBareDate bare = (SfBareDate)999_999_999_999_999L;
+            _ = Assert.ThrowsAny<Exception>(() => (DateTimeOffset)bare);
         }
 
         [Fact]
@@ -91,9 +91,9 @@ namespace Leviasan.StructuredFieldValues.Tests
         [Fact]
         public void Unwrap_Null_Throws()
         {
-            Assert.ThrowsAny<ArgumentException>(() => (long)(SfBareInteger)null!);
-            Assert.ThrowsAny<ArgumentException>(() => (string)(SfBareString)null!);
-            Assert.ThrowsAny<ArgumentException>(() => (bool)(SfBareBoolean)null!);
+            _ = Assert.ThrowsAny<ArgumentException>(() => (long)(SfBareInteger)null!);
+            _ = Assert.ThrowsAny<ArgumentException>(() => (string)(SfBareString)null!);
+            _ = Assert.ThrowsAny<ArgumentException>(() => (bool)(SfBareBoolean)null!);
         }
     }
 }

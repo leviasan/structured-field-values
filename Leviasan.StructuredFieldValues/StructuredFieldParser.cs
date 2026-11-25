@@ -142,11 +142,9 @@ namespace Leviasan.StructuredFieldValues
             }
 
             char c = cursor.Current;
-            if (c == '-' || char.IsAsciiDigit(c))
-            {
-                return ParseNumber(ref cursor);
-            }
-            return c == '"'
+            return c == '-' || char.IsAsciiDigit(c)
+                ? ParseNumber(ref cursor)
+                : c == '"'
                 ? ParseString(ref cursor)
                 : char.IsAsciiLetter(c) || c == '*'
                 ? ParseToken(ref cursor)
