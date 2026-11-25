@@ -20,7 +20,7 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
-      - name: Verify tag is on master
+      - name: verify tag is on master
         run: |
           git fetch origin master
           if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/master; then
@@ -28,7 +28,7 @@ jobs:
             exit 1
           fi
 
-      - name: Verify tag matches project version
+      - name: verify tag matches project version
         run: |
           VERSION=$(dotnet msbuild Leviasan.StructuredFieldValues/Leviasan.StructuredFieldValues.csproj -getProperty:Version)
           if [ "v$VERSION" != "${{ github.ref_name }}" ]; then
@@ -36,28 +36,28 @@ jobs:
             exit 1
           fi
 
-      - name: Restore
+      - name: restore
         run: dotnet restore structured-field-values.slnx
 
-      - name: Build
+      - name: build
         run: dotnet build structured-field-values.slnx --configuration Release --no-restore
 
-      - name: Test
+      - name: test
         run: dotnet test structured-field-values.slnx --configuration Release --no-build
 
-      - name: Pack
+      - name: pack
         run: dotnet pack Leviasan.StructuredFieldValues/Leviasan.StructuredFieldValues.csproj --configuration Release --no-build --output ./artifacts
 
-      - name: NuGet login (Trusted Publishing)
+      - name: nuget login (Trusted Publishing)
         uses: NuGet/login@v1
         id: login
         with:
-          user: Leviasan
+          user: leviasan
 
-      - name: Push to NuGet.org
+      - name: push to nuget.org
         run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
 
-      - name: Create GitHub Release
+      - name: create github release
         uses: softprops/action-gh-release@v3
         with:
           files: ./artifacts/*
