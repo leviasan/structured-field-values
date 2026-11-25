@@ -361,3 +361,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Code coverage results
+junit.xml
+*.cobertura.xml
+*.junit.xml
