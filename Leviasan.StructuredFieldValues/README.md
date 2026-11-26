@@ -21,14 +21,14 @@ dotnet add package Leviasan.StructuredFieldValues
 
 | Type | Description |
 |---|---|
-| `SfItem` | A bare item with parameters |
-| `SfInnerList` | An inner list `( ... )` with parameters |
+| `SfBareItem` | The base class of bare items |
+| `SfItem` | A top-level bare item with parameters |
+| `SfInnerList` | An inner list (`IReadOnlyList<SfItem>`) |
 | `SfList` | A top-level list (`IReadOnlyList<SfMember>`) |
 | `SfDictionary` | A top-level dictionary with preserved order and unique keys |
 | `SfParameters` | Ordered parameters `;key=value` |
-| `SfBareItem` | The base class of bare items |
 
-`SfMember` is the base class of `SfItem` and `SfInnerList`. It exposes `Parameters`.
+`SfMember` is the base class of `SfItem` and `SfInnerList`. It exposes `SfParameters`.
 
 ### Bare item types
 
